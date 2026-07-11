@@ -440,3 +440,13 @@ input:focus, select:focus, textarea:focus {
     margin-top: auto;
     border-top: 1px solid var(--border-color);
 }
+
+/* TAMBAHAN KELAS UNTUK FITUR BARU */
+.text-gold {
+    color: var(--gold) !important;
+}
+.chart-tab.active {
+    background-color: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+}
