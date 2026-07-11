@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAU/USD Trading Journal - Cent Account</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container navbar-container">
+            <div class="logo-area">
+                <span class="pulse-indicator"></span>
+                <h1>XAU/USD <span class="accent-text">JOURNAL</span></h1>
+            </div>
+            <div class="header-badge">
+                <span>Cent Account Mode (USC)</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-layout">
+        
+        <section class="sidebar-card">
+            <div class="card-header">
+                <h2>Catat Transaksi</h2>
+                <span class="sub-label">Emas (Gold) vs US Dollar</span>
+            </div>
+            
+            <form id="journal-form" class="trading-form">
+                <div class="form-group">
+                    <label for="trade-date">Tanggal & Waktu Entry</label>
+                    <input type="datetime-local" id="trade-date" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trade-type">Tipe Posisi</label>
+                        <select id="trade-type">
+                            <option value="BUY">BUY 🟢</option>
+                            <option value="SELL">SELL 🔴</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trade-lot">Ukuran Lot (Cent)</label>
+                        <input type="number" step="0.01" id="trade-lot" placeholder="e.g. 0.10" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entry-price">Harga Entry (USD)</label>
+                        <input type="number" step="0.01" id="entry-price" placeholder="e.g. 2350.50" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exit-price">Harga Exit (USD)</label>
+                        <input type="number" step="0.01" id="exit-price" placeholder="e.g. 2355.00" required>
+                    </div>
+                </div>
+
+                <div class="form-group pnl-group">
+                    <div class="pnl-header">
+                        <label for="trade-pnl">Profit / Loss (USC)</label>
+                        <button type="button" id="auto-calc-btn" class="text-btn">⚡ Auto-Hitung</button>
+                    </div>
+                    <input type="number" step="0.01" id="trade-pnl" placeholder="Contoh: 150 atau -75" required>
+                    <small class="helper-text">* Masukkan angka negatif (-) jika transaksimu mengalami kerugian/Loss.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="trade-notes">Catatan Analisis & Setup</label>
+                    <textarea id="trade-notes" rows="3" placeholder="Contoh: Rejection di Support H4, konfirmasi Candlestick Bullish Pinbar."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">Simpan Transaksi</button>
+            </form>
+        </section>
+
+        <section class="content-area">
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-label">Net Profit / Loss</span>
+                    <h3 id="stat-net-pnl" class="stat-val">0.00 USC</h3>
+                    <span id="stat-net-usd" class="stat-sub-val">$0.00 USD</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Win Rate</span>
+                    <h3 id="stat-win-rate" class="stat-val text-green">0%</h3>
+                    <div class="progress-bar-container">
+                        <div id="win-rate-bar" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Rata-rata Profit</span>
+                    <h3 id="stat-avg-win" class="stat-val text-green">0.00 USC</h3>
+                    <span class="stat-sub-val">Per Win Trade</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total Trade</span>
+                    <h3 id="stat-total-trades" class="stat-val">0</h3>
+                    <span id="stat-ratio" class="stat-sub-val">0 Win / 0 Loss</span>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">
+                    <h3>Riwayat Jurnal Trading</h3>
+                    <div class="action-buttons">
+                        <button id="btn-export" class="btn-secondary">📤 Export CSV</button>
+                        <label for="import-file" class="btn-secondary cursor-pointer">📥 Import CSV</label>
+                        <input type="file" id="import-file" accept=".csv" style="display: none;">
+                        <button id="btn-reset" class="btn-danger">🗑️ Reset Semua</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="journal-table">
+                        <thead>
+                          <tr>
+                            <th>Waktu Entry</th>
+                            <th>Posisi</th>
+                            <th>Lot</th>
+                            <th>Entry → Exit</th>
+                            <th>Hasil (USC)</th>
+                            <th>Catatan / Setup</th>
+                            <th style="text-align: center;">Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody id="journal-tbody">
+                            </tbody>
+                    </table>
+                </div>
+                
+                <div id="empty-state" class="empty-state">
+                    <p>Belum ada data trading yang dicatat. Mulai isi form di sebelah kiri untuk merekam perjalanan tradingmu!</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 XAU/USD Cent Trading Journal. Dikembangkan untuk transparansi dan disiplin manajemen risiko.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
