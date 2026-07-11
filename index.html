@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -25,64 +26,106 @@
 
     <main class="container main-layout">
         
-        <section class="sidebar-card">
-            <div class="card-header">
-                <h2>Catat Transaksi</h2>
-                <span class="sub-label">Emas (Gold) vs US Dollar</span>
+        <section class="sidebar-area" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="sidebar-card">
+                <div class="card-header">
+                    <h2>Catat Transaksi</h2>
+                    <span class="sub-label">Emas (Gold) vs US Dollar</span>
+                </div>
+                
+                <form id="journal-form" class="trading-form">
+                    <div class="form-group">
+                        <label for="trade-date">Tanggal & Waktu Entry</label>
+                        <input type="datetime-local" id="trade-date" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="trade-type">Tipe Posisi</label>
+                            <select id="trade-type">
+                                <option value="BUY">BUY 🟢</option>
+                                <option value="SELL">SELL 🔴</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="trade-lot">Ukuran Lot (Cent)</label>
+                            <input type="text" id="trade-lot" placeholder="e.g. 0.10" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="entry-price">Harga Entry (USD)</label>
+                            <input type="text" id="entry-price" placeholder="e.g. 2350.50" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="exit-price">Harga Exit (USD)</label>
+                            <input type="text" id="exit-price" placeholder="e.g. 2355.00" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group pnl-group">
+                        <div class="pnl-header">
+                            <label for="trade-pnl">Profit / Loss (USC)</label>
+                            <button type="button" id="auto-calc-btn" class="text-btn">⚡ Auto-Hitung</button>
+                        </div>
+                        <input type="text" id="trade-pnl" placeholder="Contoh: 150 atau -75" required>
+                        <small class="helper-text">* Masukkan angka negatif (-) jika transaksimu mengalami kerugian/Loss.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="trade-notes">Catatan Analisis & Setup</label>
+                        <textarea id="trade-notes" rows="3" placeholder="Contoh: Rejection di Support H4, konfirmasi Candlestick Bullish Pinbar."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Simpan Transaksi</button>
+                </form>
             </div>
-            
-            <form id="journal-form" class="trading-form">
-                <div class="form-group">
-                    <label for="trade-date">Tanggal & Waktu Entry</label>
-                    <input type="datetime-local" id="trade-date" required>
-                </div>
 
-                <div class="form-row">
+            <div class="sidebar-card">
+                <div class="card-header">
+                    <h2>💰 Manajemen Modal</h2>
+                    <span class="sub-label">Input Deposit & Top Up Modal</span>
+                </div>
+                
+                <form id="deposit-form" class="trading-form">
                     <div class="form-group">
-                        <label for="trade-type">Tipe Posisi</label>
-                        <select id="trade-type">
-                            <option value="BUY">BUY 🟢</option>
-                            <option value="SELL">SELL 🔴</option>
-                        </select>
+                        <label for="deposit-date">Tanggal Deposit</label>
+                        <input type="date" id="deposit-date" required>
                     </div>
                     <div class="form-group">
-                        <label for="trade-lot">Ukuran Lot (Cent)</label>
-                        <input type="number" step="0.01" id="trade-lot" placeholder="e.g. 0.10" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="entry-price">Harga Entry (USD)</label>
-                        <input type="number" step="0.01" id="entry-price" placeholder="e.g. 2350.50" required>
+                        <label for="deposit-amount">Jumlah Modal Masuk (USC)</label>
+                        <input type="text" id="deposit-amount" placeholder="Contoh: 1000" required>
+                        <small class="helper-text">* 1000 USC = $10.00 USD</small>
                     </div>
                     <div class="form-group">
-                        <label for="exit-price">Harga Exit (USD)</label>
-                        <input type="number" step="0.01" id="exit-price" placeholder="e.g. 2355.00" required>
+                        <label for="deposit-notes">Keterangan / Catatan</label>
+                        <input type="text" id="deposit-notes" placeholder="Contoh: Modal Awal / Top Up Bulan 2">
                     </div>
-                </div>
+                    <button type="submit" class="btn-primary" style="background-color: var(--green); color: #fff;">➕ Tambah Modal</button>
+                </form>
 
-                <div class="form-group pnl-group">
-                    <div class="pnl-header">
-                        <label for="trade-pnl">Profit / Loss (USC)</label>
-                        <button type="button" id="auto-calc-btn" class="text-btn">⚡ Auto-Hitung</button>
-                    </div>
-                    <input type="number" step="0.01" id="trade-pnl" placeholder="Contoh: 150 atau -75" required>
-                    <small class="helper-text">* Masukkan angka negatif (-) jika transaksimu mengalami kerugian/Loss.</small>
+                <div style="margin-top: 1.25rem; border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 8px;">RIWAYAT MODAL MASUK:</label>
+                    <div id="deposit-list" style="max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 0.75rem;">
+                        </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="trade-notes">Catatan Analisis & Setup</label>
-                    <textarea id="trade-notes" rows="3" placeholder="Contoh: Rejection di Support H4, konfirmasi Candlestick Bullish Pinbar."></textarea>
-                </div>
-
-                <button type="submit" class="btn-primary">Simpan Transaksi</button>
-            </form>
+            </div>
         </section>
 
         <section class="content-area">
             
             <div class="stats-grid">
+                <div class="stat-card" style="border-color: var(--gold); background: linear-gradient(145deg, var(--card-bg) 0%, rgba(245, 158, 11, 0.08) 100%);">
+                    <span class="stat-label">Total Saldo (Modal + PnL)</span>
+                    <h3 id="stat-total-balance" class="stat-val text-gold">0.00 USC</h3>
+                    <span id="stat-total-balance-usd" class="stat-sub-val" style="font-weight: 600;">$0.00 USD</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Total Modal Disetor</span>
+                    <h3 id="stat-total-deposit" class="stat-val">0.00 USC</h3>
+                    <span id="stat-total-deposit-usd" class="stat-sub-val">$0.00 USD</span>
+                </div>
                 <div class="stat-card">
                     <span class="stat-label">Net Profit / Loss</span>
                     <h3 id="stat-net-pnl" class="stat-val">0.00 USC</h3>
@@ -104,6 +147,20 @@
                     <span class="stat-label">Total Trade</span>
                     <h3 id="stat-total-trades" class="stat-val">0</h3>
                     <span id="stat-ratio" class="stat-sub-val">0 Win / 0 Loss</span>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">
+                    <h3>📈 Chart Pertumbuhan Modal (Growth)</h3>
+                    <div class="action-buttons">
+                        <button type="button" class="btn-secondary chart-tab active" data-period="daily">Harian (Daily)</button>
+                        <button type="button" class="btn-secondary chart-tab" data-period="weekly">Mingguan (Weekly)</button>
+                        <button type="button" class="btn-secondary chart-tab" data-period="monthly">Bulanan (Monthly)</button>
+                    </div>
+                </div>
+                <div style="padding: 1.25rem; height: 320px; width: 100%;">
+                    <canvas id="growthChart"></canvas>
                 </div>
             </div>
 
@@ -132,7 +189,7 @@
                           </tr>
                         </thead>
                         <tbody id="journal-tbody">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
                 
